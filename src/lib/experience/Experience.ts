@@ -100,6 +100,9 @@ export class Experience {
 		// Update phase based on scroll progress
 		this._phase.update();
 
+		// Update world with current phase
+		this._world.setPhase(this._phase.current);
+
 		// Update camera controller for smooth motion
 		this._cameraController.update(this._time.elapsedTime);
 

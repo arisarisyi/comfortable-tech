@@ -1,13 +1,19 @@
 import * as THREE from 'three';
+import { ExperiencePhase } from '$lib/experience/Phase.js';
 
 /**
  * ConnectionField - Creates dynamic connection lines between nearby particles
  * Transforms particle field into network visualization
+ * Responds to ExperiencePhase with changing opacity
  */
 export class ConnectionField {
 	private readonly _lines: THREE.LineSegments;
 	private readonly _geometry: THREE.BufferGeometry;
 	private readonly _material: THREE.LineBasicMaterial;
+	private _phase: ExperiencePhase = ExperiencePhase.INTRO;
+	private _currentOpacity: number = 0.1;
+	public readonly linePositions: Float32Array;
+	public readonly lineCount: number;
 
 	constructor(scene: THREE.Scene, particlePositions: Float32Array) {
 		const threshold = 2.5;
@@ -64,11 +70,16 @@ export class ConnectionField {
 		this._geometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
 		this._geometry.setDrawRange(0, lineIndex * 2); // Only draw computed lines
 
+		// Store ONLY valid line positions for SignalField
+		// Slice the array to exclude unused (zero) positions
+		this.linePositions = linePositions.slice(0, lineIndex * 6);
+		this.lineCount = lineIndex;
+
 		// Create material
 		this._material = new THREE.LineBasicMaterial({
 			color: 0x66aadd,
 			transparent: true,
-			opacity: 0.2
+			opacity: this._currentOpacity
 		});
 
 		// Create line segments object
@@ -78,9 +89,32 @@ export class ConnectionField {
 		scene.add(this._lines);
 	}
 
+	public setPhase(phase: ExperiencePhase): void {
+		this._phase = phase;
+	}
+
+	private _getTargetOpacity(): number {
+		switch (this._phase) {
+			case ExperiencePhase.INTRO:
+				return 0.1;
+			case ExperiencePhase.FULLSTACK:
+				return 0.35;
+			case ExperiencePhase.SECURITY:
+				return 0.6;
+			case ExperiencePhase.IOT:
+				return 0.45;
+			case ExperiencePhase.CONTACT:
+				return 0.15;
+			default:
+				return 0.1;
+		}
+	}
+
 	public update(elapsedTime: number): void {
-		// Animate slight rotation for dynamic effect
-		this._lines.rotation.y = elapsedTime * 0.02;
+		// Smooth opacity interpolation based on phase
+		const targetOpacity = this._getTargetOpacity();
+		this._currentOpacity += (targetOpacity - this._currentOpacity) * 0.05;
+		this._material.opacity = this._currentOpacity;
 	}
 
 	public destroy(): void {

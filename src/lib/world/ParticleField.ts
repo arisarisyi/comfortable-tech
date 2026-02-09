@@ -90,17 +90,8 @@ export class ParticleField {
 	}
 
 	public update(elapsedTime: number): void {
-		// Near layer - fastest rotation for parallax effect
-		this._nearLayer.points.rotation.y = elapsedTime * 0.15;
-		this._nearLayer.points.rotation.x = elapsedTime * 0.05;
-
-		// Mid layer - medium rotation
-		this._midLayer.points.rotation.y = elapsedTime * 0.08;
-		this._midLayer.points.rotation.x = elapsedTime * 0.02;
-
-		// Far layer - slowest rotation for depth
-		this._farLayer.points.rotation.y = elapsedTime * 0.03;
-		this._farLayer.points.rotation.x = elapsedTime * 0.01;
+		// Positions are static - no rotation to keep synchronization
+		// with ConnectionField and SignalField
 	}
 
 	public destroy(): void {

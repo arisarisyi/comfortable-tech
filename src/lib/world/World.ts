@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import type { Experience } from '$lib/experience/Experience.js';
 import { ParticleField } from './ParticleField.js';
 import { ConnectionField } from './ConnectionField.js';
+import { SignalField } from './SignalField.js';
+import { ExperiencePhase } from '$lib/experience/Phase.js';
 
 /**
  * World - Abstraction layer for scene content
@@ -13,6 +15,7 @@ export class World {
 	private readonly _directionalLight: THREE.DirectionalLight;
 	private readonly _particleField: ParticleField;
 	private readonly _connectionField: ConnectionField;
+	private readonly _signalField: SignalField;
 
 	constructor(experience: Experience) {
 		this._scene = experience.scene.scene;
@@ -30,16 +33,21 @@ export class World {
 
 		// Create connection field using near layer positions
 		this._connectionField = new ConnectionField(this._scene, this._particleField.positions);
+
+		// Create signal field using connection line positions
+		this._signalField = new SignalField(this._scene, this._connectionField.linePositions);
 	}
 
 	public update(elapsedTime: number): void {
 		// Update all objects in the world
 		this._particleField.update(elapsedTime);
 		this._connectionField.update(elapsedTime);
+		this._signalField.update(elapsedTime);
 	}
 
 	public destroy(): void {
 		// Destroy all objects
+		this._signalField.destroy();
 		this._connectionField.destroy();
 		this._particleField.destroy();
 
@@ -48,5 +56,9 @@ export class World {
 		this._scene.remove(this._directionalLight);
 		this._ambientLight.dispose();
 		this._directionalLight.dispose();
+	}
+
+	public setPhase(phase: ExperiencePhase): void {
+		this._connectionField.setPhase(phase);
 	}
 }
