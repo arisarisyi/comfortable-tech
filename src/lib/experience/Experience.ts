@@ -8,6 +8,7 @@ import { Scroll } from './Scroll.js';
 import { Phase } from './Phase.js';
 import { CameraController } from './CameraController.js';
 import { World } from '$lib/world/World.js';
+import { phaseStore } from '$lib/stores/phase.js';
 
 /**
  * Experience - Central controller for the WebGL experience
@@ -99,6 +100,9 @@ export class Experience {
 
 		// Update phase based on scroll progress
 		this._phase.update();
+
+		// Update phase store for UI
+		phaseStore.set(this._phase.current);
 
 		// Update world with current phase
 		this._world.setPhase(this._phase.current);

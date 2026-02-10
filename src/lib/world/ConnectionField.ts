@@ -110,7 +110,7 @@ export class ConnectionField {
 		}
 	}
 
-	public update(elapsedTime: number): void {
+	public update(_elapsedTime: number): void {
 		// Smooth opacity interpolation based on phase
 		const targetOpacity = this._getTargetOpacity();
 		this._currentOpacity += (targetOpacity - this._currentOpacity) * 0.05;

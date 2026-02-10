@@ -89,7 +89,7 @@ export class ParticleField {
 		return { points, geometry, material, positions };
 	}
 
-	public update(elapsedTime: number): void {
+	public update(_elapsedTime: number): void {
 		// Positions are static - no rotation to keep synchronization
 		// with ConnectionField and SignalField
 	}

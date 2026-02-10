@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { ExperiencePhase } from '$lib/experience/Phase.js';
 
 /**
  * SignalField - Creates moving signal pulses along network connections
@@ -15,6 +16,7 @@ export class SignalField {
 	private readonly _count: number;
 	private readonly _linePositions: Float32Array;
 	private readonly _lineCount: number;
+	private _phase: ExperiencePhase = ExperiencePhase.INTRO;
 
 	constructor(scene: THREE.Scene, linePositions: Float32Array) {
 		this._count = 150;
@@ -61,13 +63,46 @@ export class SignalField {
 		scene.add(this._signals);
 	}
 
+	public setPhase(phase: ExperiencePhase): void {
+		this._phase = phase;
+	}
+
 	public update(_elapsedTime: number): void {
 		const deltaTime = 0.016; // Approximate 60fps delta time
 
+		// Get speed multiplier based on phase
+		let multiplier: number;
+
+		switch (this._phase) {
+			case ExperiencePhase.INTRO:
+				multiplier = 0.3;
+				break;
+
+			case ExperiencePhase.FULLSTACK:
+				multiplier = 1;
+				break;
+
+			case ExperiencePhase.SECURITY:
+				multiplier = 2.5;
+				break;
+
+			case ExperiencePhase.IOT:
+				multiplier = 1.5;
+				break;
+
+			case ExperiencePhase.CONTACT:
+				multiplier = 0.4;
+				break;
+
+			default:
+				multiplier = 1;
+				break;
+		}
+
 		// Update each signal position
 		for (let i = 0; i < this._count; i++) {
-			// Update progress
-			this._progress[i]! += this._speeds[i]! * deltaTime;
+			// Update progress with speed multiplier
+			this._progress[i]! += this._speeds[i]! * multiplier * deltaTime;
 
 			// Reset if progress exceeds 1
 			if (this._progress[i]! > 1) {

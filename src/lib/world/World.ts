@@ -60,5 +60,6 @@ export class World {
 
 	public setPhase(phase: ExperiencePhase): void {
 		this._connectionField.setPhase(phase);
+		this._signalField.setPhase(phase);
 	}
 }
