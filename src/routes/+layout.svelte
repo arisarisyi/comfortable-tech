@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import WebGLCanvas from '$lib/components/WebGLCanvas.svelte';
 	import Overlay from '$lib/ui/Overlay.svelte';
 	import PortfolioOverlay from '$lib/ui/PortfolioOverlay.svelte';
@@ -12,24 +13,41 @@
 	<!-- Overlay layout system -->
 	<div class="layout-overlay">
 		<Navbar />
-		<Overlay />
-		<PortfolioOverlay />
+		{#if $page.url.pathname === '/'}
+			<Overlay />
+			<PortfolioOverlay />
+		{/if}
 	</div>
 
 	<!-- Route content -->
 	<div class="layout-content">
 		<slot />
 	</div>
-
-	<!-- Scroll driver -->
-	<div class="scroll-driver"></div>
 </div>
 
 <style>
+	:root {
+		--font-heading: 'Space Grotesk', sans-serif;
+		--font-body: 'Inter', sans-serif;
+	}
+
 	:global(body) {
 		margin: 0;
 		padding: 0;
 		background-color: #0b1a2b;
+		font-family: var(--font-body);
+	}
+
+	:global(h1),
+	:global(h2),
+	:global(h3) {
+		font-family: var(--font-heading);
+		letter-spacing: -0.02em;
+	}
+
+	:global(.navbar) {
+		font-family: var(--font-body);
+		font-weight: 500;
 	}
 
 	.layout-root {
@@ -54,12 +72,5 @@
 	.layout-content {
 		position: relative;
 		z-index: 10;
-	}
-
-	.scroll-driver {
-		position: relative;
-		width: 100%;
-		height: 500vh;
-		z-index: 1;
 	}
 </style>

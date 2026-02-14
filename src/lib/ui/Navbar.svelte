@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	function nav(path: string) {
 		goto(path);
@@ -9,12 +10,12 @@
 <nav class="navbar">
 	<div class="nav-brand">Comfortable-Tech</div>
 	<div class="nav-links">
-		<button on:click={() => nav('/')}>Home</button>
-		<button on:click={() => nav('/about')}>About</button>
-		<button on:click={() => nav('/fullstack')}>Fullstack</button>
-		<button on:click={() => nav('/security')}>Security</button>
-		<button on:click={() => nav('/iot')}>IoT</button>
-		<button on:click={() => nav('/contact')}>Contact</button>
+		<button class:active={$page.url.pathname === '/'} on:click={() => nav('/')}>Home</button>
+		<button class:active={$page.url.pathname === '/about'} on:click={() => nav('/about')}>About</button>
+		<button class:active={$page.url.pathname === '/fullstack'} on:click={() => nav('/fullstack')}>Fullstack</button>
+		<button class:active={$page.url.pathname === '/security'} on:click={() => nav('/security')}>Security</button>
+		<button class:active={$page.url.pathname === '/iot'} on:click={() => nav('/iot')}>IoT</button>
+		<button class:active={$page.url.pathname === '/contact'} on:click={() => nav('/contact')}>Contact</button>
 	</div>
 </nav>
 
@@ -34,8 +35,7 @@
 
 	.nav-brand {
 		color: white;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-			Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+		font-family: var(--font-body);
 		font-size: clamp(14px, 2vw, 16px);
 		font-weight: 600;
 		opacity: 0.9;
@@ -54,10 +54,25 @@
 		color: white;
 		cursor: pointer;
 		font-size: clamp(12px, 1.5vw, 14px);
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-			Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-		opacity: 0.7;
+		font-family: var(--font-body);
+		opacity: 0.6;
+		position: relative;
 		transition: opacity 0.3s ease;
+	}
+
+	.nav-links button.active {
+		opacity: 1;
+	}
+
+	.nav-links button.active::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: -6px;
+		width: 100%;
+		height: 2px;
+		background: #4cc9f0;
+		border-radius: 2px;
 	}
 
 	.nav-links button:hover {
@@ -69,8 +84,8 @@
 			position: fixed;
 			flex-direction: column;
 			align-items: center;
-			gap: 12px;
-			padding: 16px 20px;
+			gap: 16px;
+			padding: 16px 20px 20px 20px;
 			background: linear-gradient(to bottom, rgba(11, 26, 43, 0.9), transparent);
 			top: 0;
 			left: 0;
@@ -84,7 +99,8 @@
 		}
 
 		.nav-links {
-			gap: 8px;
+			gap: 6px;
+			row-gap: 8px;
 			flex-wrap: wrap;
 			justify-content: center;
 		}
@@ -95,6 +111,15 @@
 			border: 1px solid rgba(255, 255, 255, 0.1);
 			padding: 4px 10px;
 			border-radius: 6px;
+		}
+
+		.nav-links button.active {
+			background: rgba(76, 201, 240, 0.2);
+			border-color: #4cc9f0;
+		}
+
+		.nav-links button.active::after {
+			display: none;
 		}
 
 		.nav-links button:hover {

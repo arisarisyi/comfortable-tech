@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { Experience } from '$lib/experience/Experience.js';
+	import { isHomeRoute } from '$lib/stores/route';
 
 	let canvasElement: HTMLCanvasElement;
 	let experience: Experience | null = null;
@@ -21,6 +22,11 @@
 			experience = null;
 		}
 	});
+
+	// Sync scroll behavior with route
+	$: if (experience) {
+		experience.setScrollEnabled($isHomeRoute);
+	}
 </script>
 
 <canvas bind:this={canvasElement} class="webgl-canvas" />

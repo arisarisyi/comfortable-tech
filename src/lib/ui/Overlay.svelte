@@ -79,9 +79,9 @@
 	.identity-container.hero .title {
 		font-size: clamp(24px, 4vw, 36px);
 		color: white;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-			Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-		letter-spacing: 0.1em;
+		font-family: var(--font-heading);
+		font-weight: 700;
+		letter-spacing: -0.03em;
 		margin: 0;
 		line-height: 1.4;
 		opacity: 1;
@@ -122,7 +122,7 @@
 		}
 
 		.identity-container.compact {
-			top: 80px;
+			top: 130px;
 			left: 20px;
 			text-align: center;
 		}
@@ -132,7 +132,7 @@
 		}
 
 		.identity-container.hero {
-			top: 40%;
+			top: 45%;
 			left: 50%;
 			transform: translateX(-50%);
 		}

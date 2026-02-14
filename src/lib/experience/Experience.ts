@@ -32,6 +32,7 @@ export class Experience {
 	private readonly _world: World;
 	private readonly _resizeUnsubscribe: () => void;
 	private readonly _tickUnsubscribe: () => void;
+	private scrollEnabled = true;
 
 	constructor(options: ExperienceOptions) {
 		this._canvas = options.canvas;
@@ -94,18 +95,24 @@ export class Experience {
 		this._time.start();
 	}
 
+	public setScrollEnabled(enabled: boolean): void {
+		this.scrollEnabled = enabled;
+	}
+
 	private _update(_deltaTime: number): void {
-		// Update scroll tracking
-		this._scroll.update();
+		// Update scroll tracking (only on home route)
+		if (this.scrollEnabled) {
+			this._scroll.update();
 
-		// Update phase based on scroll progress
-		this._phase.update();
+			// Update phase based on scroll progress
+			this._phase.update();
 
-		// Update phase store for UI
-		phaseStore.set(this._phase.current);
+			// Update phase store for UI
+			phaseStore.set(this._phase.current);
 
-		// Update world with current phase
-		this._world.setPhase(this._phase.current);
+			// Update world with current phase
+			this._world.setPhase(this._phase.current);
+		}
 
 		// Update camera controller for smooth motion
 		this._cameraController.update(this._time.elapsedTime);
